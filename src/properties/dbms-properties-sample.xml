@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!--
+    This is a sample file. Update it with appropriated values.
+    'connection-type' can be 'standard' or 'pooled'.
+    This file name should be the same as PROPERTIES_FILE value
+    in JDBCTest class.
+-->
+
+<properties>
+    <entry key="dbms">MySQL</entry>
+    <entry key="connection-type">standard</entry>
+    <entry key="driver">com.mysql.cj.jdbc.Driver</entry>
+    <entry key="database">tienda</entry>
+    <entry key="user">user</entry>
+    <entry key="password">password/</entry>
+    <entry key="server">localhost</entry>
+    <entry key="port">3306</entry>
+</properties>
