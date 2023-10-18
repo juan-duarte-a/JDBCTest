@@ -14,25 +14,28 @@ public class JDBCTest {
     public static void main(String[] args) {
         try {
             JDBCTest jdbct = new JDBCTest();
-            jdbct.createDatabase();
+            Connection connection = jdbct.getConnection(true);
+            jdbct.createDatabase(connection);
+            SQLQueryManager.getAllProducts(connection);
+            SQLQueryManager.getProductsFromVendorCode(2, connection);
         } catch (IOException | SQLException e) {
-            if (e instanceof SQLException) {
-                printSQLException((SQLException) e);
+            if (e instanceof SQLException sqlException) {
+                printSQLException(sqlException);
             } else {
                 System.err.println(e.getMessage());
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        } 
     }
     
     public JDBCTest() throws IOException {
          databaseConnector = new DatabaseConnector(PROPERTIES_FILE);
     }
+    
+    public Connection getConnection(boolean showMetadata) throws SQLException {
+        return databaseConnector.getConnection(showMetadata);
+    }
 
-    public void createDatabase() throws IOException, SQLException {
-
-        Connection connection = databaseConnector.getConnection();
+    public void createDatabase(Connection connection) throws IOException, SQLException {
         Statement statement = connection.createStatement();
         String[] queries = SQLScriptParser.parseSQL(SQL_SCRIPT);
         

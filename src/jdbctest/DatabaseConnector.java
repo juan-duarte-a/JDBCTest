@@ -4,7 +4,9 @@ import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -16,18 +18,23 @@ public class DatabaseConnector {
         dbmsProperties = PropertiesLoader.loadProperties(propertiesFile);
     }
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection(boolean showMetadata) throws SQLException {
+        Connection connection = null;
+        
         String connectionUrl = "jdbc:"
                 + dbmsProperties.getProperty("dbms") + "://"
                 + dbmsProperties.getProperty("server") + ":"
                 + dbmsProperties.getProperty("port") + "/";
         if (dbmsProperties.get("connection-type").equals("standard")) {
-            return standardConnection(connectionUrl);
+            connection = standardConnection(connectionUrl);
         } else if (dbmsProperties.get("connection-type").equals("pooled")){
-            return pooledConnection(connectionUrl);
+            connection = pooledConnection(connectionUrl);
         }
 
-        return null;
+        if (connection != null && showMetadata) {
+            showConnectionMetadata(connection);
+        }
+        return connection;
     }
 
     public Connection standardConnection(String connectionUrl) throws SQLException {
@@ -61,6 +68,25 @@ public class DatabaseConnector {
         }
 
         return connection;
+    }
+    
+    public void showConnectionMetadata(Connection connection) throws SQLException {
+        DatabaseMetaData dbMetaData = connection.getMetaData();
+        
+        System.out.println();
+        System.out.println("DBMS supports TYPE_FORWARD_ONLY ResulSet: "
+                + dbMetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY));
+        System.out.println("DBMS supports TYPE_SCROLL_INSENSITIVE ResulSet: "
+                + dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE));
+        System.out.println("DBMS supports TYPE_SCROLL_SENSITIVE ResulSet: "
+                + dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE));
+        System.out.println("DBMS supports CONCUR_READ_ONLY in TYPE_SCROLL_INSENSITIVE ResulSet: "
+                + dbMetaData.supportsResultSetConcurrency(
+                        ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY));
+        System.out.println("DBMS supports CONCUR_UPDATABLE in TYPE_SCROLL_INSENSITIVE ResulSet: "
+                + dbMetaData.supportsResultSetConcurrency(
+                        ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE));
+        System.out.println();
     }
 
 }
