@@ -11,9 +11,7 @@ public class PropertiesLoader {
     public static Properties loadProperties(String propertiesFile, TYPE type) throws IOException {
         Properties dbmsProperties = new Properties();
 
-        FileInputStream inputStream = new FileInputStream(propertiesFile);
-        
-        try {
+        try (FileInputStream inputStream = new FileInputStream(propertiesFile)) {
             switch (type) {
                 case XML -> dbmsProperties.loadFromXML(inputStream);
                 case PROPERTIES -> dbmsProperties.load(inputStream);
