@@ -1,6 +1,5 @@
 package jdbctest;
 
-import com.sun.tools.javac.Main;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,8 +16,8 @@ public class JDBCTest {
         Connection connection = null;
         try {
             JDBCTest jdbct = new JDBCTest();
+            jdbct.checkDatabase();
             connection = jdbct.getConnection(true);
-            jdbct.createDatabase(connection);
             SQLQueryManager.getAllManufacturers(connection);
             SQLQueryManager.getAllProducts(connection);
             SQLQueryManager.getProductsFromManufacturer(2, connection);
@@ -63,6 +62,12 @@ public class JDBCTest {
         }
         
         System.out.println("Database creation successful.");
+    }
+    
+    public void checkDatabase() throws IOException, SQLException {
+        if (!databaseConnector.databaseExists()) {
+            createDatabase(databaseConnector.connect());
+        }
     }
     
     private static void printSQLException(SQLException e) {

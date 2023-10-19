@@ -19,6 +19,17 @@ public class DatabaseConnector {
     }
 
     public Connection getConnection(boolean showMetadata) throws SQLException {
+        Connection connection = connect();
+        
+        if (showMetadata) {
+            showConnectionMetadata(connection);
+        }
+        
+        connection.setCatalog(dbmsProperties.getProperty("database"));
+        return connection;
+    }
+    
+    public Connection connect() throws SQLException {
         Connection connection = null;
         
         String connectionUrl = "jdbc:"
@@ -30,14 +41,7 @@ public class DatabaseConnector {
         } else if (dbmsProperties.get("connection-type").equals("pooled")){
             connection = pooledConnection(connectionUrl);
         }
-
-        if (connection != null) {
-            connection.setCatalog(dbmsProperties.getProperty("database"));
-            
-            if (showMetadata) {
-                showConnectionMetadata(connection);
-            }
-        }
+        
         return connection;
     }
 
@@ -91,6 +95,22 @@ public class DatabaseConnector {
                 + dbMetaData.supportsResultSetConcurrency(
                         ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE));
         System.out.println();
+    }
+    
+    public boolean databaseExists() throws SQLException {
+        Connection connection = connect();
+        
+        try {
+            connection.setCatalog(dbmsProperties.getProperty("database"));
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1049) {
+                return false;
+            } else {
+                throw e;
+            }
+        }
+        
+        return true;
     }
 
 }
