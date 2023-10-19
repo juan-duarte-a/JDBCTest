@@ -1,5 +1,6 @@
 nbproject/private/
 **/dbms-properties.xml
+**/dbms-properties.properties
 out/
 
 target/

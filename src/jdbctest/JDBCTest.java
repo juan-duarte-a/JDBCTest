@@ -8,6 +8,7 @@ import java.sql.Statement;
 public class JDBCTest {
 
     private static final String PROPERTIES_FILE = "./src/properties/dbms-properties.xml";
+    private static final PropertiesLoader.TYPE TYPE = PropertiesLoader.TYPE.XML;
     private static final String SQL_SCRIPT = "./src/sql_scripts/tienda.sql";
     private final DatabaseConnector databaseConnector;
 
@@ -16,8 +17,9 @@ public class JDBCTest {
             JDBCTest jdbct = new JDBCTest();
             Connection connection = jdbct.getConnection(true);
             jdbct.createDatabase(connection);
+            SQLQueryManager.getAllManufacturers(connection);
             SQLQueryManager.getAllProducts(connection);
-            SQLQueryManager.getProductsFromVendorCode(2, connection);
+            SQLQueryManager.getProductsFromManufacturer(2, connection);
         } catch (IOException | SQLException e) {
             if (e instanceof SQLException sqlException) {
                 printSQLException(sqlException);
@@ -28,7 +30,7 @@ public class JDBCTest {
     }
     
     public JDBCTest() throws IOException {
-         databaseConnector = new DatabaseConnector(PROPERTIES_FILE);
+         databaseConnector = new DatabaseConnector(PROPERTIES_FILE, TYPE);
     }
     
     public Connection getConnection(boolean showMetadata) throws SQLException {

@@ -7,27 +7,38 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SQLQueryManager {
-
-    public static void getAllProducts(Connection connection) throws SQLException {
-        String query = "SELECT * FROM producto";
+    
+    private static void executeSelect(String query, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        printResultSet(resultSet, 26);
+        printResultSet(query, resultSet, 26);
     }
     
-    public static void getProductsFromVendorCode(int vendor, Connection connection) throws SQLException {
+    public static void getAllManufacturers(Connection connection) throws SQLException {
+        executeSelect("SELECT * FROM fabricante", connection);
+    }
+
+    public static void getAllProducts(Connection connection) throws SQLException {
+        executeSelect("SELECT * FROM producto", connection);
+    }
+    
+    public static void getProductsFromManufacturer(
+            int vendor, Connection connection) throws SQLException {
         String query = "SELECT * FROM producto WHERE codigo_fabricante = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, vendor);
         ResultSet resultSet = statement.executeQuery();
-        printResultSet(resultSet, 26);
+        printResultSet(query, resultSet, 26);
     }
 
-    public static void printResultSet(ResultSet resultSet, int columnLength) throws SQLException {
+    public static void printResultSet(
+            String query, ResultSet resultSet, int columnLength) 
+            throws SQLException {
         int columns = resultSet.getMetaData().getColumnCount();
         int lineLength = (columnLength + 3) * columns;
         
         System.out.println();
+        System.out.println(query);
         for (int i = 0; i < lineLength + 1; i++) {
             System.out.print("-");
         }

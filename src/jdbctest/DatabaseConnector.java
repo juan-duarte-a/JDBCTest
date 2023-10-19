@@ -14,8 +14,8 @@ public class DatabaseConnector {
     private final Properties dbmsProperties;
     private MysqlConnectionPoolDataSource poolDataSource;
 
-    public DatabaseConnector(String propertiesFile) throws IOException {
-        dbmsProperties = PropertiesLoader.loadProperties(propertiesFile);
+    public DatabaseConnector(String propertiesFile, PropertiesLoader.TYPE type) throws IOException {
+        dbmsProperties = PropertiesLoader.loadProperties(propertiesFile, type);
     }
 
     public Connection getConnection(boolean showMetadata) throws SQLException {

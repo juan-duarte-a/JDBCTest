@@ -5,11 +5,19 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesLoader {
-    public static Properties loadProperties(String propertiesFile) throws IOException {
+    
+    public static enum TYPE {XML, PROPERTIES};
+    
+    public static Properties loadProperties(String propertiesFile, TYPE type) throws IOException {
         Properties dbmsProperties = new Properties();
 
+        FileInputStream inputStream = new FileInputStream(propertiesFile);
+        
         try {
-            dbmsProperties.loadFromXML(new FileInputStream(propertiesFile));
+            switch (type) {
+                case XML -> dbmsProperties.loadFromXML(inputStream);
+                case PROPERTIES -> dbmsProperties.load(inputStream);
+            }
         } catch (IOException e) {
             System.err.println("Error reading properties file.");
             throw e;

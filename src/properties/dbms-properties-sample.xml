@@ -14,7 +14,7 @@
     <entry key="driver">com.mysql.cj.jdbc.Driver</entry>
     <entry key="database">tienda</entry>
     <entry key="user">user</entry>
-    <entry key="password">password/</entry>
+    <entry key="password">password</entry>
     <entry key="server">localhost</entry>
     <entry key="port">3306</entry>
 </properties>
