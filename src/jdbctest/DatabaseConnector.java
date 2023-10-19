@@ -31,8 +31,12 @@ public class DatabaseConnector {
             connection = pooledConnection(connectionUrl);
         }
 
-        if (connection != null && showMetadata) {
-            showConnectionMetadata(connection);
+        if (connection != null) {
+            connection.setCatalog(dbmsProperties.getProperty("database"));
+            
+            if (showMetadata) {
+                showConnectionMetadata(connection);
+            }
         }
         return connection;
     }
