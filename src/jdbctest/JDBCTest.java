@@ -1,5 +1,6 @@
 package jdbctest;
 
+import com.sun.tools.javac.Main;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,21 +13,26 @@ public class JDBCTest {
     private static final String SQL_SCRIPT = "./src/sql_scripts/tienda.sql";
     private final DatabaseConnector databaseConnector;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Connection connection = null;
         try {
             JDBCTest jdbct = new JDBCTest();
-            Connection connection = jdbct.getConnection(true);
+            connection = jdbct.getConnection(true);
             jdbct.createDatabase(connection);
             SQLQueryManager.getAllManufacturers(connection);
             SQLQueryManager.getAllProducts(connection);
             SQLQueryManager.getProductsFromManufacturer(2, connection);
         } catch (IOException | SQLException e) {
             if (e instanceof SQLException sqlException) {
-                printSQLException(sqlException);
+                JDBCTest.printSQLException(sqlException);
             } else {
                 System.err.println(e.getMessage());
             }
-        } 
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
     
     public JDBCTest() throws IOException {
