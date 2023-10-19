@@ -10,8 +10,10 @@ public class SQLQueryManager {
     
     private static void executeSelect(String query, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query);
-        printResultSet(query, resultSet, 26);
+        
+        try (ResultSet resultSet = statement.executeQuery(query)) {
+            printResultSet(query, resultSet, 26);
+        }
     }
     
     public static void getAllManufacturers(Connection connection) throws SQLException {
@@ -27,8 +29,10 @@ public class SQLQueryManager {
         String query = "SELECT * FROM producto WHERE codigo_fabricante = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, vendor);
-        ResultSet resultSet = statement.executeQuery();
-        printResultSet(query, resultSet, 26);
+        
+        try (ResultSet resultSet = statement.executeQuery()) {
+            printResultSet(query, resultSet, 26);
+        }
     }
 
     public static void printResultSet(
