@@ -9,7 +9,7 @@ public class PropertiesLoader {
     public static enum TYPE {XML, PROPERTIES};
     
     public static Properties loadProperties(String propertiesFile, TYPE type) throws IOException {
-        Properties dbmsProperties = new Properties();
+        var dbmsProperties = new Properties();
 
         try (FileInputStream inputStream = new FileInputStream(propertiesFile)) {
             switch (type) {

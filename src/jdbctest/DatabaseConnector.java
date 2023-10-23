@@ -19,7 +19,7 @@ public class DatabaseConnector {
     }
 
     public Connection getConnection(boolean showMetadata) throws SQLException {
-        Connection connection = connect();
+        var connection = connect();
         
         if (showMetadata) {
             showConnectionMetadata(connection);
@@ -98,9 +98,7 @@ public class DatabaseConnector {
     }
     
     public boolean databaseExists() throws SQLException {
-        Connection connection = connect();
-        
-        try {
+        try (var connection = connect()) {
             connection.setCatalog(dbmsProperties.getProperty("database"));
         } catch (SQLException e) {
             if (e.getErrorCode() == 1049) {

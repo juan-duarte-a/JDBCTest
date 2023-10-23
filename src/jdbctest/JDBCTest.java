@@ -43,7 +43,7 @@ public class JDBCTest {
     }
 
     public void createDatabase(Connection connection) throws IOException, SQLException {
-        Statement statement = connection.createStatement();
+        var statement = connection.createStatement();
         String[] queries = SQLScriptParser.parseSQL(SQL_SCRIPT);
         
         for (String query : queries) {
@@ -66,7 +66,9 @@ public class JDBCTest {
     
     public void checkDatabase() throws IOException, SQLException {
         if (!databaseConnector.databaseExists()) {
-            createDatabase(databaseConnector.connect());
+            try (var connection = databaseConnector.connect()) {
+                createDatabase(connection);
+            }
         }
     }
     
