@@ -4,12 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class SQLQueryManager {
     
     private static void executeSelect(String query, Connection connection) throws SQLException {
-        Statement statement = connection.createStatement();
+        var statement = connection.createStatement();
         
         try (ResultSet resultSet = statement.executeQuery(query)) {
             printResultSet(query, resultSet, 26);

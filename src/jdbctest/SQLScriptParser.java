@@ -8,7 +8,7 @@ import java.io.IOException;
 public class SQLScriptParser {
 
     public static String[] parseSQL(String sqlScriptFile) throws IOException {
-        StringBuilder sqlScript = new StringBuilder();
+        var sqlScript = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(sqlScriptFile))) {
             String line;
